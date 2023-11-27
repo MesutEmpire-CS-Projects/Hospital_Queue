@@ -4,6 +4,10 @@ from PriorityQueue import PriorityQueueBase, Empty
 class HeapPriorityQueue(PriorityQueueBase):  # base class defines Item
     """A min-oriented priority queue implemented with a binary heap."""
 
+    def __iter__(self):
+        """Iterator for the priority queue."""
+        return iter(sorted(self._data, key=lambda item: item._key))
+
     # ------------------------------ nonpublic behaviors ------------------------------
     def _parent(self, j):
         return (j - 1) // 2

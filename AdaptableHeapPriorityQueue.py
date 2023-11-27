@@ -11,7 +11,6 @@ class AdaptableHeapPriorityQueue(HeapPriorityQueue):
 
         def __init__(self, k, v, j):
             super().__init__(k, v)
-            print(f'AHPQ key: {k} and Value : {v} and index : {j}')
             self._index = j
 
     # ------------------------------ nonpublic behaviors ------------------------------
