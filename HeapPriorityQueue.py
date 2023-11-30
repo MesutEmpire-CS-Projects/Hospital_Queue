@@ -6,7 +6,7 @@ class HeapPriorityQueue(PriorityQueueBase):  # base class defines Item
 
     def __iter__(self):
         """Iterator for the priority queue."""
-        return iter(sorted(self._data, key=lambda item: item._key))
+        return iter(self.get_data())
 
     # ------------------------------ nonpublic behaviors ------------------------------
     def _parent(self, j):
@@ -47,10 +47,6 @@ class HeapPriorityQueue(PriorityQueueBase):  # base class defines Item
                 self._downheap(small_child)  # recur at the position of the small child
 
     # ------------------------------ public behaviors ------------------------------
-
-    # def __init__(self):
-    #     """Create a new empty Priority Queue."""
-    #     self._data = []
 
     def __init__(self, contents=()):
         """Create a new empty Priority Queue."""
@@ -93,3 +89,6 @@ class HeapPriorityQueue(PriorityQueueBase):  # base class defines Item
         item = self._data.pop()  # and remove it from the list;
         self._downheap(0)  # then fix the new root
         return (item._key, item._value)
+
+    def get_data(self):
+        return sorted(self._data, key=lambda item: (item._key, item._time_added))

@@ -14,7 +14,7 @@ class AdaptableHeapPriorityQueue(HeapPriorityQueue):
             self._index = j
 
     # ------------------------------ nonpublic behaviors ------------------------------
-    # override swap to record new indices
+
     def _swap(self, i, j):
         super()._swap(i, j)  # perform the swap
         self._data[i]._index = i  # reset locator index (post-swap)
@@ -26,11 +26,7 @@ class AdaptableHeapPriorityQueue(HeapPriorityQueue):
         else:
             self._downheap(j)
 
-    # Code Fragment 9.8: An implementation of an adaptable priority queue (continued
-    # in Code Fragment 9.9). This extends the HeapPriorityQueue class of Code Fragments 9.4 and 9.5
-
-    # ... (omitting the rest for brevity)
-
+    # ------------------------------ public behaviors ------------------------------
     def add(self, key, value):
         """Add a key-value pair."""
         token = self.Locator(key, value, len(self._data))  # initialize locator index

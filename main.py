@@ -2,9 +2,8 @@ import random
 
 import pygame
 
-from PriorityQueue import Empty
-
 from AdaptableHeapPriorityQueue import AdaptableHeapPriorityQueue
+from PriorityQueue import Empty
 
 # Initialize Pygame
 pygame.init()
@@ -24,6 +23,7 @@ font = pygame.font.Font('freesansbold.ttf', 20)
 hospital_queue = AdaptableHeapPriorityQueue()
 
 
+# 1. The Button class
 class Button:
     def __init__(self, name, x, y):
         self._name = name
@@ -44,18 +44,17 @@ class Button:
         return self._name
 
 
+# 2. The Display Class
 class Display:
     def __init__(self):
-        self.input = {
-            'name': "",
-            'age': None
-        }
+        self.input = {'name': "", 'age': None}
         self._result = None
         self._color = 'black'
         self._rect = pygame.Rect(50, 300, 200, 50)
 
     def show(self):
-        text = font.render("Result: " + str(self._result), True, self._color)
+        tag = "Result: " if self._color is not 'red' else 'Error:'
+        text = font.render(str(tag) + str(self._result), True, self._color)
         text_rect = pygame.Rect(WIDTH // 2, HEIGHT * 1 / 5, 300, 50)
         screen.blit(text, text_rect)
 
@@ -70,51 +69,38 @@ class Display:
         return self._result
 
 
+# 3. The Input Class
 class Input:
     def __init__(self):
-        self.patient_input = {
-            'name': None,
-            'age': None,
-            'index': None,
-            'condition': None
-        }
-        self._input_rects = {
-            'name': pygame.Rect(300, 100, 200, 50),
-            'age': pygame.Rect(300, 200, 200, 50),
-            'index': pygame.Rect(300, 300, 200, 50),
-            'condition': pygame.Rect(300, 400, 200, 50),
-            'label_name': pygame.Rect(30, 100, 250, 50),
-            'label_age': pygame.Rect(30, 200, 250, 50),
-            'label_index': pygame.Rect(30, 300, 250, 50),
-            'label_condition': pygame.Rect(30, 400, 250, 50),
-            'label_condition_explanation': pygame.Rect(30, 450, 250, 30)
-        }
+        self.patient_input = {'name': None, 'age': None, 'index': None, 'condition': None}
+        self._input_rects = {'name': pygame.Rect(300, 100, 200, 50), 'age': pygame.Rect(300, 200, 200, 50),
+                             'index': pygame.Rect(300, 300, 200, 50), 'condition': pygame.Rect(300, 400, 200, 50),
+                             'label_name': pygame.Rect(30, 100, 250, 50), 'label_age': pygame.Rect(30, 200, 250, 50),
+                             'label_index': pygame.Rect(30, 300, 250, 50),
+                             'label_condition': pygame.Rect(30, 400, 250, 50),
+                             'label_condition_explanation': pygame.Rect(30, 450, 250, 30)}
         self._labels = {}
         self.active = True
 
     def show(self):
-        self._labels = {
-            'label_name': font.render(f' Enter Patient Name: ', True, 'black'),
-            'label_age': font.render(f' Enter Patient Age: ', True, 'black'),
-            'label_condition': font.render(f' Enter Patient Condition:', True, 'black'),
-            'label_condition_explanation': pygame.font.Font('freesansbold.ttf', 14).render(
-                f'(CRITICAL = 0, SEVERE = 1, FAIR = 2)', True, 'black'),
-            'label_index': font.render(f' Enter Patient Index: ', True, 'black'),
-            'name': font.render(f'{self.patient_input["name"]}', True, 'black'),
-            'age': font.render(f' {str(self.patient_input["age"])} ', True, 'black'),
-            'condition': font.render(f' {str(self.patient_input["condition"])} ', True, 'black'),
-            'index': font.render(f' {str(self.patient_input["index"])} ', True, 'black')
-        }
+        self._labels = {'label_name': font.render(f' Enter Patient Name: ', True, 'black'),
+                        'label_age': font.render(f' Enter Patient Age: ', True, 'black'),
+                        'label_condition': font.render(f' Enter Patient Condition:', True, 'black'),
+                        'label_condition_explanation': pygame.font.Font('freesansbold.ttf', 14).render(
+                            f'(CRITICAL = 0, SEVERE = 1, FAIR = 2)', True, 'black'),
+                        'label_index': font.render(f' Enter Patient Index: ', True, 'black'),
+                        'name': font.render(f'{self.patient_input["name"]}', True, 'black'),
+                        'age': font.render(f' {str(self.patient_input["age"])} ', True, 'black'),
+                        'condition': font.render(f' {str(self.patient_input["condition"])} ', True, 'black'),
+                        'index': font.render(f' {str(self.patient_input["index"])} ', True, 'black')}
         for key, rect in self._input_rects.items():
             if key is not 'label_condition_explanation':
                 pygame.draw.rect(screen, 'black', rect, 2)
-                screen.blit(self._labels[key], (
-                    rect.centerx - self._labels[key].get_width() // 2,
-                    rect.centery - self._labels[key].get_height() // 2))
+                screen.blit(self._labels[key], (rect.centerx - self._labels[key].get_width() // 2,
+                                                rect.centery - self._labels[key].get_height() // 2))
             else:
-                screen.blit(self._labels[key], (
-                    rect.centerx - self._labels[key].get_width() // 2,
-                    rect.centery - self._labels[key].get_height() // 2))
+                screen.blit(self._labels[key], (rect.centerx - self._labels[key].get_width() // 2,
+                                                rect.centery - self._labels[key].get_height() // 2))
 
     def get_input_name(self):
         return self.patient_input['name']
@@ -129,14 +115,10 @@ class Input:
         return self.patient_input['condition']
 
     def reset_input(self):
-        self.patient_input = {
-            'name': None,
-            'age': None,
-            'index': None,
-            'condition': None
-        }
+        self.patient_input = {'name': None, 'age': None, 'index': None, 'condition': None}
 
 
+# 4. The Patient Class
 class Patient:
     def __init__(self, name, age, condition):
         self.index = random.randint(0, 1)
@@ -147,20 +129,11 @@ class Patient:
     def draw(self, x, y):
         condition = None
         if self._condition == 0:
-            condition = {
-                'name': 'CRITICAL',
-                'color': 'red'
-            }
+            condition = {'name': 'CRITICAL', 'color': 'red'}
         elif self._condition == 1:
-            condition = {
-                'name': 'SEVERE',
-                'color': 'orange'
-            }
+            condition = {'name': 'SEVERE', 'color': 'orange'}
         elif self._condition == 2:
-            condition = {
-                'name': 'FAIR',
-                'color': 'blue'
-            }
+            condition = {'name': 'FAIR', 'color': 'blue'}
         image = pygame.image.load(IMAGE_PATH[self.index])
         image = pygame.transform.scale(image, (150, 110))
         screen.blit(image, (x, y, 5, 150))
@@ -181,7 +154,12 @@ class Patient:
     def get_patient_condition(self):
         return self._condition
 
+    def update_condition(self, condition):
+        self._condition = condition
+        return self
 
+
+# 5. The Reception Class
 class Reception:
     def __init__(self, x, y):
         self._x = x
@@ -193,6 +171,7 @@ class Reception:
         screen.blit(image, (self._x, self.y, 5, 500))
 
 
+# Initialize the classes
 reception = Reception(RECEPTION_WIDTH, HEIGHT * 1 / 3)
 display_info = Display()
 input_box = Input()
@@ -204,7 +183,7 @@ buttons = [Button('Add', 10, 10), Button('Remove min', 180, 10), Button('Min', 3
 def add_patient():
     try:
         if x + 160 > WIDTH and y - 210 < HEIGHT * 1 / 3:
-            display_info.set_result('Error: The queue is full', 'red')
+            display_info.set_result('The queue is full', 'red')
         elif input_box.get_input_name() and input_box.get_input_age() and input_box.get_input_condition() is not None:
             new_patient = Patient(input_box.get_input_name(), input_box.get_input_age(),
                                   input_box.get_input_condition())
@@ -212,87 +191,108 @@ def add_patient():
             input_box.reset_input()
             display_info.reset_result()
         else:
-            display_info.set_result('Error input data is None', 'red')
+            display_info.set_result('Input data is None', 'red')
 
     except Empty:
-        display_info.set_result('Error in adding patient', 'red')
+        display_info.set_result('Queue is empty', 'red')
+
+    except Exception as e:
+        display_info.set_result(f' {str(e)}', 'red')
 
 
 def remove_min_patient():
     try:
         remove_patient = hospital_queue.remove_min()
         display_info.set_result(f'(Key : {remove_patient[0]}, Value : {remove_patient[1].get_patient_name()})')
+        input_box.reset_input()
     except Empty:
-        display_info.set_result('Error removing the next patient', 'red')
+        display_info.set_result(' Queue is empty', 'red')
+    except Exception as e:
+        display_info.set_result(f'{str(e)}', 'red')
 
 
 def min():
     try:
         next_patient = hospital_queue.min()
         display_info.set_result(f'(Key : {next_patient[0]}, Value : {next_patient[1].get_patient_name()})')
+        input_box.reset_input()
     except Empty:
-        display_info.set_result('Error in determining the next patient', 'red')
+        display_info.set_result(' Queue is empty', 'red')
+    except Exception as e:
+        display_info.set_result(f'{str(e)}', 'red')
 
 
 def is_empty():
     try:
         is_queue_empty = hospital_queue.is_empty()
-        display_info.set_result(f'{is_queue_empty}')
+        if is_queue_empty:
+            display_info.set_result('Queue is empty')
+        else:
+            display_info.set_result('Queue is not empty', 'black')
+        input_box.reset_input()
+
     except Empty:
-        display_info.set_result('Error in determining if the queue is empty patient', 'red')
+        display_info.set_result('Queue is empty', 'red')
+    except Exception as e:
+        display_info.set_result(f' {str(e)}', 'red')
 
 
 def length():
     try:
         queue_length = len(hospital_queue)
         display_info.set_result(f'Length : {queue_length}')
+        input_box.reset_input()
     except Empty:
-        display_info.set_result('Error in determining the length of the queue', 'red')
+        display_info.set_result('Queue is empty', 'red')
+    except Exception as e:
+        display_info.set_result(f'{str(e)}', 'red')
 
 
 def remove_patient():
     try:
         if hospital_queue.is_empty():
-            display_info.set_result("Error: Queue is empty", 'red')
+            display_info.set_result("Queue is empty", 'red')
         elif input_box.get_input_index() is not None:
-            patient_loc = hospital_queue._data[input_box.get_input_index()]
+            patient_loc = hospital_queue.get_data()[input_box.get_input_index()]
             removed_patient = hospital_queue.remove(patient_loc)
             display_info.set_result(f'(Key : {removed_patient[0]}, Value : {removed_patient[1].get_patient_name()})')
+            input_box.reset_input()
         else:
-            display_info.set_result('Error input index is None', 'red')
+            display_info.set_result('Input index is None', 'red')
     except IndexError:
-        display_info.set_result("Error : Invalid Locator", 'red')
+        display_info.set_result("Invalid Locator", 'red')
     except Empty:
-        display_info.set_result('Error in removing patient from the queue', 'red')
+        display_info.set_result('Queue is empty', 'red')
+    except Exception as e:
+        display_info.set_result(f' {str(e)}', 'red')
 
 
 def update_queue():
     try:
         if hospital_queue.is_empty():
-            display_info.set_result("Error: Queue is empty", 'red')
+            display_info.set_result("Queue is empty", 'red')
         else:
             input_index = input_box.get_input_index()
-            input_name = input_box.get_input_name()
-            input_age = input_box.get_input_age()
             input_condition = input_box.get_input_condition()
 
-            if input_index is not None and input_name and input_age and input_condition is not None:
-                patient_loc = hospital_queue._data[input_box.get_input_index()]
+            if input_index is not None and input_condition is not None:
+                patient_loc = hospital_queue.get_data()[input_box.get_input_index()]
 
                 if patient_loc is not None:
-                    new_patient = Patient(input_name, input_age, input_condition)
-                    hospital_queue.update(patient_loc, input_condition, new_patient)
+                    updated_patient = patient_loc._value.update_condition(input_condition)
+
+                    hospital_queue.update(patient_loc, input_condition, updated_patient)
                     input_box.reset_input()
                     display_info.reset_result()
                 else:
-                    display_info.set_result("Error: Invalid Locator", 'red')
+                    display_info.set_result(" Invalid Locator", 'red')
             else:
-                display_info.set_result('Error: Input index or other details are None', 'red')
+                display_info.set_result(' Input index or other details are None', 'red')
 
     except Empty:
-        display_info.set_result('Error: Queue is empty or in removing patient from the queue', 'red')
+        display_info.set_result(' Queue is empty', 'red')
     except Exception as e:
-        display_info.set_result(f'Error: {str(e)}', 'red')
+        display_info.set_result(f' {str(e)}', 'red')
 
 
 running = True
@@ -356,7 +356,7 @@ while running:
                         input_box.patient_input["age"] = int(temp_age)
                         display_info.reset_result()
                     except ValueError:
-                        display_info.set_result('Error: Enter an Integer for the age', 'red')
+                        display_info.set_result('Enter an Integer for the age', 'red')
                 elif input_box._input_rects['index'].collidepoint(mouse_position):
                     try:
                         temp_index = str(input_box.patient_input["index"]) if input_box.patient_input[
@@ -365,7 +365,7 @@ while running:
                         input_box.patient_input["index"] = int(temp_index)
                         display_info.reset_result()
                     except ValueError:
-                        display_info.set_result('Error: Enter an Integer for the index', 'red')
+                        display_info.set_result('Enter an Integer for the index', 'red')
                 elif input_box._input_rects['condition'].collidepoint(mouse_position):
                     try:
                         temp_condition = str(input_box.patient_input["condition"]) if input_box.patient_input[
@@ -374,9 +374,10 @@ while running:
                         input_box.patient_input["condition"] = int(temp_condition)
                         display_info.reset_result()
                     except ValueError:
-                        display_info.set_result('Error: Enter 0, 1, or 2 for the condition', 'red')
+                        display_info.set_result('Enter 0, 1, or 2 for the condition', 'red')
 
     screen.fill('white')
+
     # Draw buttons
     for button in buttons:
         button.draw()
