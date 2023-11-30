@@ -66,7 +66,7 @@ class HeapPriorityQueue(PriorityQueueBase):  # base class defines Item
     def add(self, key, value):
         """Add a key-value pair to the priority queue."""
         self._data.append(self._Item(key, value))
-        self._upheap(len(self._data) - 1)  # upheap newly added position
+        self._upheap(len(self._data) - 1)
 
     def min(self):
         """Return but do not remove (k,v) tuple with the minimum key.

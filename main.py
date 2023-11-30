@@ -126,7 +126,7 @@ class Patient:
         self._age = age
         self._condition = condition
 
-    def draw(self, x, y):
+    def draw(self, x, y,index):
         condition = None
         if self._condition == 0:
             condition = {'name': 'CRITICAL', 'color': 'red'}
@@ -138,12 +138,15 @@ class Patient:
         image = pygame.transform.scale(image, (150, 110))
         screen.blit(image, (x, y, 5, 150))
         label_name = font.render(str(self._name), True, 'black')
+        label_index = font.render(str(index), True, 'black')
         label_name_rect = pygame.rect.Rect(x + 65, y - 40, 40, 30)
         label_condition = pygame.font.Font('freesansbold.ttf', 14).render(str(condition['name']), True,
                                                                           condition['color'])
         label_condition_rect = pygame.rect.Rect(x + 65, y - 20, 40, 30)
+        label_index_rect = pygame.rect.Rect(x + 145, y - 20, 40, 30)
         screen.blit(label_name, label_name_rect)
         screen.blit(label_condition, label_condition_rect)
+        screen.blit(label_index, label_index_rect)
 
     def get_patient_name(self):
         return self._name
@@ -394,14 +397,15 @@ while running:
     global y
     y = HEIGHT * 5 / 6
 
-    for patient in hospital_queue:
+    # for patient in hospital_queue:
+    for index, patient in enumerate(hospital_queue):
         if x + 160 > WIDTH:
             x = WIDTH // 2
             y -= 150
-            patient._value.draw(x, y)
+            patient._value.draw(x, y,index)
             x += 160
         else:
-            patient._value.draw(x, y)
+            patient._value.draw(x, y,index)
             x += 160
 
     pygame.display.flip()
